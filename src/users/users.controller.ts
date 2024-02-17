@@ -16,7 +16,7 @@ import { UserDto } from './dto/user.dto';
 export class UsersController {
   constructor(private userService: UsersService) {}
   @Get()
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserDto[]> {
     return this.userService.findAll();
   }
 

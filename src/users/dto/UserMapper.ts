@@ -9,6 +9,9 @@ export class UserMapper {
     userDto.email = user.email.toLowerCase(); // Esempio di manipolazione: email in lowercase
     userDto.lastName = user.lastName;
     userDto.province = user.province;
+    userDto.created_at = user.created_at;
+    userDto.updated_at = user.updated_at;
+    userDto.deleted_at = user.deleted_at;
     return userDto;
   }
 }
