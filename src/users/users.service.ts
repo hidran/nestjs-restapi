@@ -20,4 +20,9 @@ export class UsersService {
       },
     });
   }
+  async delete(id: number): Promise<boolean> {
+    const res = await this.usersRepository.delete(id);
+
+    return Boolean(res.affected);
+  }
 }
