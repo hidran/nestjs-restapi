@@ -7,6 +7,7 @@ import {
   Delete,
   Body,
   Patch,
+  Put,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -16,7 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService) { }
   @Get()
   async findAll(): Promise<UserDto[]> {
     return this.userService.findAll();
@@ -31,7 +32,7 @@ export class UsersController {
     return this.userService.create(user);
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() userDto: UpdateUserDto,
