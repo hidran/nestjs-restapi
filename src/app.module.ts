@@ -9,14 +9,13 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'mysql',
       port: 3306,
-      username: 'root',
-      password: '',
+      username: 'hidran',
+      password: 'Hidran.123',
       database: 'ums',
       entities: [User],
       synchronize: true,
-     // autoLoadEntities: true,
     }),
     UsersModule,
     AuthModule,
