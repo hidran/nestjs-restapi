@@ -24,11 +24,26 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(registerDto.password, 12);
 
-    const newUser = this.userService.create({
+    const newUser = await this.userService.create({
       ...registerDto,
       password: hashedPassword,
     });
-    return newUser;
+      const payload = { email: newUser.email, sub: newUser.id};
+      const access_token = this.jwtService.sign(payload);
+      const tokenData = this.jwtService.decode(access_token);
+      console.log(tokenData);
+      const exp = tokenData['exp']*1000 - new Date().getTime();
+
+
+    return {
+        access_token,
+        expires_in: exp,
+        user:{
+            email: newUser.email,
+            name: newUser.name,
+            lastName: newUser.lastName
+        }
+    };
   }
   async login(loginDto: LoginDto) {
     return [];
