@@ -1,10 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UserDto } from 'src/users/dto/user.dto';
+import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class AuthService {
   constructor(
@@ -28,24 +29,42 @@ export class AuthService {
       ...registerDto,
       password: hashedPassword,
     });
-      const payload = { email: newUser.email, sub: newUser.id};
-      const access_token = this.jwtService.sign(payload);
-      const tokenData = this.jwtService.decode(access_token);
-      console.log(tokenData);
-      const exp = tokenData['exp']*1000 - new Date().getTime();
+      const { access_token, exp } = this.generateToken(newUser);
 
-
-    return {
+     const returnPayload = this.generatePayload(access_token, exp, newUser);
+      return returnPayload;
+  }
+    private generateToken(newUser: UserDto) {
+        const payload = { email: newUser.email, sub: newUser.id };
+        const access_token = this.jwtService.sign(payload);
+        const tokenData = this.jwtService.decode(access_token);
+        console.log(tokenData);
+        const exp = tokenData['exp'] * 1000 - new Date().getTime();
+        return { access_token, exp };
+    }
+private  generatePayload(access_token: string,exp:number, user:UserDto)
+{
+ return   {
         access_token,
-        expires_in: exp,
-        user:{
-            email: newUser.email,
-            name: newUser.name,
-            lastName: newUser.lastName
+            expires_in: exp,
+                user: {
+                    email: user.email,
+                    name: user.name,
+                    lastName: user.lastName
         }
-    };
-  }
+    }
+}
   async login(loginDto: LoginDto) {
-    return [];
-  }
+      const user = await this.userService.findOneByEmail(loginDto.email);
+      if (!user) {
+          throw new UnauthorizedException('Invalid credentials');
+      }
+      const isMatch = await bcrypt.compare(loginDto.password, user.password)
+      if (!isMatch) {
+          throw new UnauthorizedException('Invalid credentials');
+      }
+      const { access_token, exp } = this.generateToken(user);
+      const returnPayload = this.generatePayload(access_token, exp, user);
+      return returnPayload;
+    }
 }
