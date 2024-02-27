@@ -12,19 +12,19 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 64, nullable: false })
+  @Column({ length: 64, nullable: true })
   name: string;
 
-  @Column({ nullable: false, length: 64 })
+  @Column({ nullable: true, length: 64 })
   lastName: string;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: true })
   fiscalCode: string;
 
-  @Column()
+  @Column({ nullable: true, length: 16 })
   phone: string;
 
-  @Column()
+  @Column({ nullable: true, length: 2 })
   province: string;
 
   @Column({ unique: true, nullable: false })

@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 import { UserMapper } from './dto/UserMapper';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterDto } from 'src/auth/dto/register.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,8 +27,12 @@ export class UsersService {
       },
     });
   }
-
-  async create(user: CreateUserDto): Promise<UserDto> {
+  async findOneByEmail(email: string) {
+    return this.usersRepository.findOneBy({
+      email,
+    });
+  }
+  async create(user: CreateUserDto | RegisterDto): Promise<UserDto> {
     const userCreated = this.usersRepository.create(user);
     const created = await this.usersRepository.save(userCreated);
     return UserMapper.mapUserToUserDto(created);
