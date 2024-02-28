@@ -6,7 +6,6 @@ import {
   ParseIntPipe,
   Delete,
   Body,
-  Patch,
   Put,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
