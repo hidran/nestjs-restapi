@@ -26,7 +26,7 @@ export class AuthService {
         private readonly userService: UsersService,
         private readonly jwtService: JwtService
     ) {}
-    async register(registerDto: RegisterDto) {
+    async register(registerDto: RegisterDto): Promise<JwtToken> {
         if (typeof registerDto.email === 'undefined') {
             throw new ConflictException('Wrong email');
         }
