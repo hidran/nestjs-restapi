@@ -1,37 +1,37 @@
 version: '3.8'
 services:
-  mysql:
-    image: mysql:8.3
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_USER: ${DATABASE_USER}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
-    ports:
-      - "${DB_PORT_FORWARD}:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    restart: always
+    mysql:
+        image: mysql:8.3
+        #command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_DATABASE: ${DATABASE_NAME}
+            MYSQL_USER: ${DATABASE_USER}
+            MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+        ports:
+            - '${DB_PORT_FORWARD}:3306'
+        volumes:
+            - mysql-data:/var/lib/mysql
+        restart: always
 
-  app:
-    image: node:20.11-alpine
-    command: sh -c "npm install && npm run start:dev"
-    working_dir: /app
-    ports:
-      - "${APP_PORT_FORWARD}:3000"
-    depends_on:
-      - mysql
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      DATABASE_HOST: mysql
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_NAME: ${DATABASE_NAME}
-    restart: always
+    app:
+        image: node:20.11-alpine
+        command: sh -c "npm install && npm run start:dev"
+        working_dir: /app
+        ports:
+            - '${APP_PORT_FORWARD}:${APP_PORT}'
+        depends_on:
+            - mysql
+        volumes:
+            - .:/app
+            - /app/node_modules
+        environment:
+            DATABASE_HOST: mysql
+            DATABASE_PORT: ${DATABASE_PORT}
+            DATABASE_USER: ${DATABASE_USER}
+            DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+            DATABASE_NAME: ${DATABASE_NAME}
+        restart: always
 
 volumes:
-  mysql-data:
+    mysql-data:

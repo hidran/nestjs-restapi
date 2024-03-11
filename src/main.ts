@@ -8,11 +8,17 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
         cors: {
             credentials: true,
-            origin: 'http://localhost:4200',
-            methods: ['GET', 'PATCH', 'POST', 'DELETE', 'PUT'],
+            origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
+            methods: process.env.CORS_METHODS || [
+                'GET',
+                'PATCH',
+                'POST',
+                'DELETE',
+                'PUT',
+            ],
         },
     });
     app.use(cookieParser());
-    await app.listen(3000);
+    await app.listen(process.env.PORT || 5000);
 }
 bootstrap();

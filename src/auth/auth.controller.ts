@@ -15,7 +15,7 @@ export class AuthController {
         const secure = this.config.get<string>('SECURE_COOKIE');
         const ttl = this.config.get<number>('TTL_COOKIE') ?? 3600000;
         const result = {
-            httpOnly: true,
+            httpOnly: false,
             secure: secure === 'false' || secure === '0' ? false : true,
             maxAge: +ttl,
         };
